@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FinSight - Accounting & Investment Analysis</title>
+<style>
+:root{
+  --navy:#172033;--blue:#2563eb;--green:#15803d;--red:#dc2626;
+  --bg:#f6f7f9;--card:#fff;--line:#e5e7eb;--muted:#667085;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--navy)}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:235px;background:#111827;color:#fff;padding:25px 15px}
+.brand{font-size:23px;font-weight:700;padding:0 12px 30px}
+.brand span{color:#60a5fa}
+.nav button{width:100%;border:0;background:transparent;color:#cbd5e1;text-align:left;padding:12px 14px;border-radius:8px;margin:3px 0;cursor:pointer;font-size:14px}
+.nav button:hover,.nav button.active{background:#1f2937;color:#fff}
+.content{margin-left:235px;padding:28px 34px;max-width:1500px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+h1{font-size:27px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px}
+.search{display:flex;gap:8px}.search input{width:245px;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.btn{background:var(--blue);border:0;color:#fff;padding:10px 15px;border-radius:8px;font-weight:600;cursor:pointer}
+.page{display:none}.page.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.card{background:#fff;border:1px solid var(--line);border-radius:11px;padding:18px}
+.card h3{margin:0 0 15px;font-size:16px}.label{font-size:11px;color:var(--muted);text-transform:uppercase}
+.big{font-size:24px;font-weight:700;margin-top:7px}.positive{color:var(--green)}.negative{color:var(--red)}
+.two{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-top:16px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.notice{background:#eef5ff;border:1px solid #cfe0ff;border-radius:9px;padding:12px 14px;color:#254a8a;font-size:13px;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}th{font-size:10px;color:var(--muted);text-transform:uppercase}
+.metric{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}.metric:last-child{border-bottom:0}
+.tabs{display:flex;gap:7px;margin:14px 0}.tabs button{background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:7px;cursor:pointer}.tabs button.active{background:#eff6ff;color:#1d4ed8;border-color:#bfd4ff}
+.techpanel{display:none}.techpanel.active{display:block}
+.chart{height:300px}.chart svg{width:100%;height:100%}
+.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.field label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}.field input,.field select{width:100%;padding:10px;border:1px solid var(--line);border-radius:7px}
+.footer{font-size:11px;color:var(--muted);margin-top:25px}
+@media(max-width:900px){.sidebar{width:190px}.content{margin-left:190px;padding:20px}.cards{grid-template-columns:repeat(2,1fr)}.two,.three{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">Fin<span>Sight</span></div>
+  <div class="nav">
+    <button class="active" onclick="openPage('dashboard',this)">Dashboard</button>
+    <button onclick="openPage('accounting',this)">Accounting</button>
+    <button onclick="openPage('invoices',this)">Invoices</button>
+    <button onclick="openPage('expenses',this)">Expenses</button>
+    <button onclick="openPage('investment',this)">Investment Analysis</button>
+    <button onclick="openPage('reports',this)">Reports</button>
+  </div>
+</aside>
+
+<main class="content">
+  <div class="header">
+    <div>
+      <h1 id="title">Dashboard</h1>
+      <div class="sub" id="subtitle">Accounting information and financial analysis in one system</div>
+    </div>
+    <div class="search">
+      <input id="company" value="Reliance Industries" placeholder="Company name">
+      <button class="btn" onclick="analyseCompany()">Analyse</button>
+    </div>
+  </div>
+
+  <section id="dashboard" class="page active">
+    <div class="notice"><b>Company:</b> <span id="dashCompany">Reliance Industries</span>. Accounting records can be used to prepare financial statements and support investment analysis.</div>
+    <div class="cards">
+      <div class="card"><div class="label">Revenue</div><div class="big">₹1,00,000 Cr</div><div class="positive">12.4% YoY</div></div>
+      <div class="card"><div class="label">Net Profit</div><div class="big">₹79,000 Cr</div><div class="positive">9.8% YoY</div></div>
+      <div class="card"><div class="label">Free Cash Flow</div><div class="big">₹32,500 Cr</div><div class="positive">Positive</div></div>
+      <div class="card"><div class="label">Debt / Equity</div><div class="big">0.41×</div><div>Moderate leverage</div></div>
+    </div>
+    <div class="two">
+      <div class="card">
+        <h3>Revenue and Profit Trend</h3>
+        <div class="chart"><svg viewBox="0 0 700 280">
+          <path d="M25 230 L130 210 L235 194 L340 165 L445 145 L550 105 L675 68" fill="none" stroke="#2563eb" stroke-width="4"/>
+          <path d="M25 247 L130 239 L235 225 L340 208 L445 188 L550 169 L675 148" fill="none" stroke="#15803d" stroke-width="3"/>
+          <g fill="#667085" font-size="12"><text x="25" y="270">FY20</text><text x="185" y="270">FY21</text><text x="345" y="270">FY22</text><text x="505" y="270">FY23</text><text x="640" y="270">FY24</text></g>
+        </svg></div>
+        <div class="sub">Blue: revenue · Green: profit</div>
+      </div>
+      <div class="card">
+        <h3>Financial Summary</h3>
+        <div class="metric"><span>Gross margin</span><b>24.6%</b></div>
+        <div class="metric"><span>Operating margin</span><b>11.3%</b></div>
+        <div class="metric"><span>ROE</span><b>13.8%</b></div>
+        <div class="metric"><span>ROCE</span><b>11.9%</b></div>
+        <div class="metric"><span>Current ratio</span><b>1.34×</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="accounting" class="page">
+    <div class="cards">
+      <div class="card"><div class="label">Receivables</div><div class="big">₹12.4 Cr</div></div>
+      <div class="card"><div class="label">Payables</div><div class="big">₹8.7 Cr</div></div>
+      <div class="card"><div class="label">Expenses</div><div class="big">₹6.2 Cr</div></div>
+      <div class="card"><div class="label">Cash Balance</div><div class="big">₹18.9 Cr</div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Automated Accounting Ledger</h3>
+      <table>
+        <tr><th>Date</th><th>Description</th><th>Debit</th><th>Credit</th><th>Status</th></tr>
+        <tr><td>21 Sep</td><td>Sales invoice #1042</td><td>₹85,000</td><td>—</td><td>Posted</td></tr>
+        <tr><td>21 Sep</td><td>Inventory purchase</td><td>—</td><td>₹42,000</td><td>Posted</td></tr>
+        <tr><td>20 Sep</td><td>Marketing expense</td><td>₹18,500</td><td>—</td><td>Posted</td></tr>
+      </table>
+    </div>
+    <div class="three">
+      <div class="card"><h3>Bookkeeping</h3><div class="sub">Transactions are classified and posted into the ledger.</div></div>
+      <div class="card"><h3>Tax Records</h3><div class="sub">Taxable sales and expenses are organized for review and filing.</div></div>
+      <div class="card"><h3>Financial Statements</h3><div class="sub">Ledger data feeds the P&L, balance sheet and cash-flow reports.</div></div>
+    </div>
+  </section>
+
+  <section id="invoices" class="page">
+    <div class="card">
+      <h3>Create Invoice</h3>
+      <div class="formgrid">
+        <div class="field"><label>Customer</label><input id="customer" placeholder="Customer name"></div>
+        <div class="field"><label>Amount</label><input id="amount" type="number" value="10000"></div>
+        <div class="field"><label>GST %</label><input id="gst" type="number" value="18"></div>
+      </div>
+      <button class="btn" style="margin-top:15px" onclick="makeInvoice()">Generate Invoice</button>
+      <div id="invoiceResult" class="notice" style="display:none;margin-top:15px"></div>
+    </div>
+  </section>
+
+  <section id="expenses" class="page">
+    <div class="card">
+      <h3>Expense Entry</h3>
+      <div class="formgrid">
+        <div class="field"><label>Category</label><select><option>Marketing</option><option>Payroll</option><option>Inventory</option><option>Travel</option><option>Utilities</option></select></div>
+        <div class="field"><label>Amount</label><input type="number" placeholder="₹"></div>
+        <div class="field"><label>Date</label><input type="date"></div>
+      </div>
+      <button class="btn" style="margin-top:15px">Save Expense</button>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Monthly Expense Summary</h3>
+      <div class="metric"><span>Marketing</span><b>₹2.1 Cr</b></div>
+      <div class="metric"><span>Payroll</span><b>₹1.8 Cr</b></div>
+      <div class="metric"><span>Inventory</span><b>₹1.4 Cr</b></div>
+      <div class="metric"><span>Other</span><b>₹0.9 Cr</b></div>
+    </div>
+  </section>
+
+  <section id="investment" class="page">
+    <div class="notice">This section combines accounting information, company fundamentals, valuation, market trend and risk indicators for investment research.</div>
+    <div class="tabs">
+      <button class="active" onclick="showTab('fundamentals',this)">Fundamentals</button>
+      <button onclick="showTab('technicals',this)">Technicals</button>
+      <button onclick="showTab('valuation',this)">Valuation</button>
+      <button onclick="showTab('risk',this)">Risk</button>
+    </div>
+
+    <div id="fundamentals" class="techpanel active">
+      <div class="cards">
+        <div class="card"><div class="label">Revenue Growth</div><div class="big">12.4%</div></div>
+        <div class="card"><div class="label">EPS</div><div class="big">₹118.4</div></div>
+        <div class="card"><div class="label">ROE</div><div class="big">13.8%</div></div>
+        <div class="card"><div class="label">Debt / Equity</div><div class="big">0.41×</div></div>
+      </div>
+      <div class="two">
+        <div class="card"><h3>Fundamental Metrics</h3><table>
+          <tr><th>Metric</th><th>Value</th><th>Purpose</th></tr>
+          <tr><td>Revenue growth</td><td>12.4%</td><td>Business growth</td></tr>
+          <tr><td>Net profit margin</td><td>8.1%</td><td>Profitability</td></tr>
+          <tr><td>ROCE</td><td>11.9%</td><td>Capital efficiency</td></tr>
+          <tr><td>Current ratio</td><td>1.34×</td><td>Liquidity</td></tr>
+          <tr><td>Free cash flow</td><td>₹32,500 Cr</td><td>Cash generation</td></tr>
+        </table></div>
+        <div class="card"><h3>Business Quality</h3>
+          <div class="metric"><span>Profitability</span><b>Healthy</b></div>
+          <div class="metric"><span>Cash generation</span><b>Positive</b></div>
+          <div class="metric"><span>Leverage</span><b>Moderate</b></div>
+          <div class="metric"><span>Earnings trend</span><b>Growing</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="technicals" class="techpanel">
+      <div class="cards">
+        <div class="card"><div class="label">Current Price</div><div class="big" id="price">₹3,470</div></div>
+        <div class="card"><div class="label">SMA 20</div><div class="big" id="sma20">—</div></div>
+        <div class="card"><div class="label">SMA 50</div><div class="big" id="sma50">—</div></div>
+        <div class="card"><div class="label">RSI 14</div><div class="big" id="rsi">—</div></div>
+      </div>
+      <div class="two">
+        <div class="card">
+          <h3>Price and Moving Averages</h3>
+          <div class="chart"><svg id="technicalChart" viewBox="0 0 700 280"></svg></div>
+          <div class="sub">Price · SMA 20 · SMA 50 · SMA 200</div>
+        </div>
+        <div class="card">
+          <h3>Technical Indicators</h3>
+          <div class="metric"><span>EMA 20</span><b id="ema20">—</b></div>
+          <div class="metric"><span>RSI (14)</span><b id="rsi2">—</b></div>
+          <div class="metric"><span>MACD (12,26,9)</span><b id="macd">—</b></div>
+          <div class="metric"><span>Bollinger Bands</span><b id="bb">20 / 2σ</b></div>
+          <div class="metric"><span>ATR (14)</span><b id="atr">—</b></div>
+          <div class="metric"><span>Volume MA (20)</span><b>Calculated</b></div>
+          <div class="metric"><span>Support / Resistance</span><b>Auto levels</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="valuation" class="techpanel">
+      <div class="cards">
+        <div class="card"><div class="label">P/E</div><div class="big">24.8×</div></div>
+        <div class="card"><div class="label">P/B</div><div class="big">2.9×</div></div>
+        <div class="card"><div class="label">EV / EBITDA</div><div class="big">13.6×</div></div>
+        <div class="card"><div class="label">Dividend Yield</div><div class="big">0.7%</div></div>
+      </div>
+      <div class="card" style="margin-top:16px"><h3>Valuation Comparison</h3><table>
+        <tr><th>Measure</th><th>Company</th><th>5Y Average</th><th>Use</th></tr>
+        <tr><td>P/E</td><td>24.8×</td><td>27.1×</td><td>Earnings valuation</td></tr>
+        <tr><td>P/B</td><td>2.9×</td><td>3.2×</td><td>Book value valuation</td></tr>
+        <tr><td>EV/EBITDA</td><td>13.6×</td><td>15.0×</td><td>Operating valuation</td></tr>
+      </table></div>
+    </div>
+
+    <div id="risk" class="techpanel">
+      <div class="cards">
+        <div class="card"><div class="label">Beta</div><div class="big">0.92</div></div>
+        <div class="card"><div class="label">Volatility</div><div class="big">18.6%</div></div>
+        <div class="card"><div class="label">Max Drawdown</div><div class="big negative">-14.2%</div></div>
+        <div class="card"><div class="label">Interest Coverage</div><div class="big">5.4×</div></div>
+      </div>
+      <div class="card" style="margin-top:16px"><h3>Risk Review</h3>
+        <div class="metric"><span>Market sensitivity</span><b>Beta 0.92</b></div>
+        <div class="metric"><span>Price volatility</span><b>18.6%</b></div>
+        <div class="metric"><span>Historical drawdown</span><b>-14.2%</b></div>
+        <div class="metric"><span>Debt servicing</span><b>5.4× coverage</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reports" class="page">
+    <div class="three">
+      <div class="card"><h3>Profit & Loss</h3><div class="sub">Revenue, cost, operating expenses and profit.</div><button class="btn" style="margin-top:15px">View</button></div>
+      <div class="card"><h3>Balance Sheet</h3><div class="sub">Assets, liabilities and shareholders' equity.</div><button class="btn" style="margin-top:15px">View</button></div>
+      <div class="card"><h3>Cash Flow</h3><div class="sub">Operating, investing and financing cash flows.</div><button class="btn" style="margin-top:15px">View</button></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3>Investment Analysis Report</h3><div class="sub">A consolidated view of fundamentals, valuation, technical indicators and risk measures.</div><button class="btn" style="margin-top:15px" onclick="openPage('investment',document.querySelectorAll('.nav button')[4])">Open Analysis</button></div>
+  </section>
+
+  <div class="footer">Prototype for ACCM508. Market and financial values shown in this prototype are illustrative and should be connected to verified data sources for real-world use.</div>
+</main>
+
+<script>
+function openPage(id,btn){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+ const titles={dashboard:['Dashboard','Accounting information and financial analysis in one system'],
+ accounting:['Accounting','Automated bookkeeping and financial records'],
+ invoices:['Invoices','Create and calculate invoices'],
+ expenses:['Expenses','Track and classify business expenses'],
+ investment:['Investment Analysis','Fundamentals, valuation, technical indicators and risk'],
+ reports:['Reports','Financial statements and analysis reports']};
+ document.getElementById('title').textContent=titles[id][0];
+ document.getElementById('subtitle').textContent=titles[id][1];
+}
+function showTab(id,btn){
+ document.querySelectorAll('.techpanel').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
+ btn.classList.add('active');
+ if(id==='technicals')drawTechnical();
+}
+function analyseCompany(){
+ const name=document.getElementById('company').value.trim()||'Selected Company';
+ document.getElementById('dashCompany').textContent=name;
+ document.getElementById('subtitle').textContent='Analysis workspace for '+name;
+}
+function makeInvoice(){
+ const amount=Number(document.getElementById('amount').value)||0;
+ const gst=Number(document.getElementById('gst').value)||0;
+ const tax=amount*gst/100,total=amount+tax;
+ const box=document.getElementById('invoiceResult');
+ box.style.display='block';
+ box.innerHTML='Subtotal: <b>₹'+amount.toLocaleString()+'</b> &nbsp; GST: <b>₹'+tax.toLocaleString()+'</b> &nbsp; Total: <b>₹'+total.toLocaleString()+'</b>';
+}
+function sma(a,n,i){if(i<n-1)return null;let s=0;for(let j=i-n+1;j<=i;j++)s+=a[j];return s/n}
+function ema(a,n){let k=2/(n+1),e=a[0];for(let i=1;i<a.length;i++)e=a[i]*k+e*(1-k);return e}
+function calcRSI(a,n){let gain=0,loss=0;for(let i=1;i<=n;i++){let d=a[i]-a[i-1];if(d>0)gain+=d;else loss-=d}let rs=gain/(loss||.0001);return 100-100/(1+rs)}
+function drawTechnical(){
+ const a=[2710,2740,2725,2760,2795,2810,2780,2830,2860,2845,2890,2910,2880,2935,2950,2975,2940,2990,3015,2980,3030,3060,3040,3080,3110,3090,3130,3160,3140,3180,3205,3175,3210,3240,3220,3265,3290,3270,3310,3340,3320,3360,3385,3360,3400,3420,3390,3440,3470,3450,3490,3510,3480,3520,3550,3530,3570,3600,3580,3610,3640,3620];
+ const last=a.length-1,s20=sma(a,20,last),s50=sma(a,50,last),s200=sma(a,200,last),r=calcRSI(a,14),e20=ema(a.slice(-30),20);
+ document.getElementById('price').textContent='₹'+a[last].toLocaleString();
+ document.getElementById('sma20').textContent='₹'+Math.round(s20).toLocaleString();
+ document.getElementById('sma50').textContent='₹'+Math.round(s50).toLocaleString();
+ document.getElementById('rsi').textContent=r.toFixed(1);
+ document.getElementById('rsi2').textContent=r.toFixed(1);
+ document.getElementById('ema20').textContent='₹'+Math.round(e20).toLocaleString();
+ document.getElementById('macd').textContent=(sma(a,12,last)-sma(a,26,last)).toFixed(1);
+ document.getElementById('atr').textContent='₹'+Math.round(a.slice(-14).reduce((s,v,i,ar)=>s+(i?Math.abs(v-ar[i-1]):0),0)/13);
+ const svg=document.getElementById('technicalChart'),mn=Math.min(...a),mx=Math.max(...a);
+ const path=(arr)=>arr.map((v,i)=>v==null?null:(20+i*660/(a.length-1))+','+(245-(v-mn)/(mx-mn)*205)).filter(Boolean).join(' L ');
+ svg.innerHTML='<path d="M '+path(a)+'" fill="none" stroke="#2563eb" stroke-width="3"/><path d="M '+path(a.map((_,i)=>sma(a,20,i)))+'" fill="none" stroke="#15803d" stroke-width="2"/><path d="M '+path(a.map((_,i)=>sma(a,50,i)))+'" fill="none" stroke="#7c3aed" stroke-width="2"/><text x="25" y="270" font-size="12" fill="#667085">Price</text><text x="82" y="270" font-size="12" fill="#15803d">SMA20</text><text x="150" y="270" font-size="12" fill="#7c3aed">SMA50</text>';
+}
+</script>
+</body>
+</html>
